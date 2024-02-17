@@ -3,6 +3,7 @@ langchain
 PyPDF2
 python-dotenv
 chromadb
+pysqlite3-binary 
 langchain-core
 langchain-community
 langchain-openai
