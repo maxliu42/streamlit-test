@@ -2,7 +2,8 @@ streamlit
 langchain
 PyPDF2
 python-dotenv
-pysqlite3-binary 
+pysqlite3-binary
+chromadb
 langchain-core
 langchain-community
 langchain-openai
