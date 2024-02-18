@@ -80,7 +80,7 @@ def get_response(user_input):
     
     response = conversation_rag_chain.invoke({
         "chat_history": st.session_state.chat_history,
-        "input": user_query
+        "input": user_input
     })
     
     return response['answer']
@@ -117,6 +117,7 @@ with st.sidebar:
 
                 user_chunks = get_text_chunks(user_text)
                 st.session_state.vector_store = get_vectorstore(user_chunks)
+
 
 if not user_files or "vector_store" not in st.session_state:
     st.info("Please upload your files")
