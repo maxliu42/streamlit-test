@@ -2,6 +2,7 @@
 # streamlit=1.13.1, langchain=0.1.6, langchain-community=0.0.19
 
 import io
+import sys
 import streamlit as st
 from PyPDF2 import PdfReader
 from langchain_core.messages import AIMessage, HumanMessage
@@ -13,6 +14,8 @@ from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
+__import__('pysqlite3')
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 load_dotenv()
 
