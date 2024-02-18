@@ -56,7 +56,7 @@ def get_context_retriever_chain(vector_store):
 
 
 # invoked for ai response
-def get_conversational_rag_chain(retriever_chain): 
+def get_conversational_rag_chain(retriever_chain):
     
     llm = ChatOpenAI()
     
@@ -102,8 +102,20 @@ with st.sidebar:
     st.subheader("Your documents")
     user_files = st.file_uploader(
         "Upload your files here. Allowed: *.txt, *.pdf", accept_multiple_files=True)
+    if st.button("Process"):
+        with st.spinner("Processing"):
+            user_text = ""
+            for user_file in user_files:
+                if user_file.name.endswith(".pdf"):
+                    user_text += get_pdf_text(user_file)
+                # we can use text directly
+                elif user_file.name.endswith(".txt"):
+                    user_text += str(user_file.read())
 
-if not user_files:
+                user_chunks = get_text_chunks(user_text)
+                st.session_state.vector_store = get_vectorstore(user_chunks)
+
+if not user_files or "vector_store" not in st.session_state:
     st.info("Please upload your files")
 
     # allows the user to change files by removing the old one
@@ -120,21 +132,6 @@ else:
         st.session_state.chat_history =  [
                 AIMessage(content="Are you ready to be grilled by OpenTA?"),
         ]
-
-    # we parse the file the user uploaded into vectorstore for use in conversation
-    if "vector_store" not in st.session_state:
-        # we allow uploading pdf or text for now. if it's a pdf, we convert to text
-        user_text = ""
-        for user_file in user_files:
-            if user_file.name.endswith(".pdf"):
-                user_text += get_pdf_text(user_file)
-            # we can use text directly
-            elif user_file.name.endswith(".txt"):
-                user_text += str(user_file.read())
-
-            user_chunks = get_text_chunks(user_text)
-            st.session_state.vector_store = get_vectorstore(user_chunks)
-    
 
     # user input
     user_query = st.chat_input("Type your message here...")
